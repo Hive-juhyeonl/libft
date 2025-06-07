@@ -74,6 +74,7 @@ This project is a personal implementation of **libft**, a custom C library.
 ## Error handling
 - ft_error  
 
+## Usage for other projets
 ```makefile
 CFLAGS   = -Wall -Wextra -Werror -Iincludes -Ilibft
 
