@@ -1,7 +1,10 @@
 # libft
 
-This project is a personal implementation of libft, a custom C library.
+# Personal Libft Library
 
+This project is a personal implementation of **libft**, a custom C library.
+
+```makefile
 CFLAGS   = -Wall -Wextra -Werror -Iincludes -Ilibft
 
 $(NAME): $(OBJS) libft/libft.a
