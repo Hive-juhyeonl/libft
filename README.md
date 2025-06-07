@@ -1,5 +1,3 @@
-# libft
-
 # Personal Libft Library
 
 This project is a personal implementation of **libft**, a custom C library.
