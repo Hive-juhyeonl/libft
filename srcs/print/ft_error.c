@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: JuHyeon <JuHyeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juhyeonl <juhyeonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 23:35:11 by JuHyeon           #+#    #+#             */
-/*   Updated: 2025/10/19 23:35:13 by JuHyeon          ###   ########.fr       */
+/*   Updated: 2025/10/22 12:03:05 by juhyeonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,5 @@
 void	ft_error(char *msg)
 {
 	ft_putendl_fd(msg, 2);
-	exit(1);
+	return(1);
 }
