@@ -6,7 +6,7 @@
 /*   By: JuHyeon <JuHyeon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 23:32:21 by JuHyeon           #+#    #+#             */
-/*   Updated: 2025/10/19 23:32:23 by JuHyeon          ###   ########.fr       */
+/*   Updated: 2025/11/04 21:42:02 by JuHyeon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static char	*read_from_fd(int fd, char *storage)
 	if (!buffer)
 		return (NULL);
 	bytes_read = 1;
-	while (!ft_strchr(storage, '\n') && bytes_read != 0)
+	while (storage && !ft_strchr(storage, '\n') && bytes_read != 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
