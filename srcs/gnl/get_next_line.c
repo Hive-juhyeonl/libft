@@ -3,104 +3,125 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: JuHyeon <JuHyeon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: juhyeonl <juhyeonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/19 23:32:21 by JuHyeon           #+#    #+#             */
-/*   Updated: 2025/11/04 21:42:02 by JuHyeon          ###   ########.fr       */
+/*   Created: 2025/11/05 09:28:14 by juhyeonl          #+#    #+#             */
+/*   Updated: 2025/11/05 09:28:15 by juhyeonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	*extract_line(char *storage)
+char	*get_before_newline(const char *s)
 {
-	char	*line;
+	char	*res;
 	int		i;
 
 	i = 0;
-	if (!storage[i])
-		return (NULL);
-	while (storage[i] && storage[i] != '\n')
+	while (s[i] != '\0' && s[i] != '\n')
 		i++;
-	line = (char *)malloc(sizeof(char) * (i + 2));
-	if (!line)
+	if (s[i] != '\0' && s[i] == '\n')
+		i++;
+	res = ft_malloc_zero(i + 1, sizeof * res);
+	if (!res)
 		return (NULL);
 	i = 0;
-	while (storage[i] && storage[i] != '\n')
+	while (s[i] != '\0' && s[i] != '\n')
 	{
-		line[i] = storage[i];
+		res[i] = s[i];
 		i++;
 	}
-	if (storage[i] == '\n')
+	if (s[i] == '\n')
 	{
-		line[i] = storage[i];
+		res[i] = s[i];
 		i++;
 	}
-	line[i] = '\0';
-	return (line);
+	return (res);
 }
 
-static char	*update_storage(char *storage)
+char	*get_after_newline(const char *s)
 {
-	char	*new_storage;
+	char	*res;
 	int		i;
 	int		j;
 
-	i = 0;
-	while (storage[i] && storage[i] != '\n')
-		i++;
-	if (!storage[i])
-	{
-		free(storage);
-		return (NULL);
-	}
-	new_storage = (char *)malloc(sizeof(char) * (ft_strlen(storage) - i + 1));
-	if (!new_storage)
-		return (NULL);
-	i++;
 	j = 0;
-	while (storage[i])
-		new_storage[j++] = storage[i++];
-	new_storage[j] = '\0';
-	free(storage);
-	return (new_storage);
+	while (s && s[j])
+		j++;
+	i = 0;
+	while (s[i] != '\0' && s[i] != '\n')
+		i++;
+	if (s[i] != '\0' && s[i] == '\n')
+		i++;
+	res = ft_malloc_zero((j - i) + 1, sizeof * res);
+	if (!res)
+		return (NULL);
+	j = 0;
+	while (s[i + j])
+	{
+		res[j] = s[i + j];
+		j++;
+	}
+	return (res);
 }
 
-static char	*read_from_fd(int fd, char *storage)
+void	ft_read_line(int fd, char **keep, char **tmp)
 {
-	char	*buffer;
-	int		bytes_read;
+	char	*buf;
+	int		r;
 
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
-		return (NULL);
-	bytes_read = 1;
-	while (storage && !ft_strchr(storage, '\n') && bytes_read != 0)
+	buf = malloc(sizeof * buf * (BUFFER_SIZE + 1));
+	if (!buf)
+		return ;
+	r = 1;
+	while (r > 0)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
+		r = read(fd, buf, BUFFER_SIZE);
+		if (r == -1)
 		{
-			free(buffer);
-			return (NULL);
+			ft_free_strs(&buf, keep, tmp);
+			return ;
 		}
-		buffer[bytes_read] = '\0';
-		storage = join_strs(storage, buffer);
+		buf[r] = '\0';
+		*tmp = ft_strdup(*keep);
+		ft_free_strs(keep, 0, 0);
+		*keep = join_strs(*tmp, buf);
+		ft_free_strs(tmp, 0, 0);
+		if (contains_newline(*keep))
+			break ;
 	}
-	free(buffer);
-	return (storage);
+	ft_free_strs(&buf, 0, 0);
+}
+
+char	*ft_parse_line(char **keep, char **tmp)
+{
+	char	*line;
+
+	*tmp = ft_strdup(*keep);
+	ft_free_strs(keep, 0, 0);
+	*keep = get_after_newline(*tmp);
+	line = get_before_newline(*tmp);
+	ft_free_strs(tmp, 0, 0);
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*storage;
+	static char	*keep = NULL;
+	char		*tmp;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	storage = read_from_fd(fd, storage);
-	if (!storage)
+	line = NULL;
+	tmp = NULL;
+	ft_read_line(fd, &keep, &tmp);
+	if (keep != NULL && *keep != '\0')
+		line = ft_parse_line(&keep, &tmp);
+	if (!line || *line == '\0')
+	{
+		ft_free_strs(&keep, &line, &tmp);
 		return (NULL);
-	line = extract_line(storage);
-	storage = update_storage(storage);
+	}
 	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: juhyeonl <juhyeonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 23:35:11 by JuHyeon           #+#    #+#             */
-/*   Updated: 2025/10/22 12:39:04 by juhyeonl         ###   ########.fr       */
+/*   Updated: 2025/11/05 09:29:07 by juhyeonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,5 @@
 int	ft_error(char *msg)
 {
 	ft_putendl_fd(msg, 2);
-	return(1);
+	return (1);
 }

@@ -6,13 +6,16 @@
 /*   By: juhyeonl <juhyeonl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 23:42:46 by JuHyeon           #+#    #+#             */
-/*   Updated: 2025/10/22 12:39:16 by juhyeonl         ###   ########.fr       */
+/*   Updated: 2025/11/05 09:30:29 by juhyeonl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <fcntl.h>
+# include <stddef.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
@@ -72,16 +75,28 @@ void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
-/* get_next_line */
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE BUFSIZ
 # endif
 
+# if BUFFER_SIZE > 9223372036854775806
+#  undef BUFFER_SIZE
+#  define BUFFER_SIZE 0
+# endif
+
+/* ---------- GNL ------------ */
 char	*get_next_line(int fd);
+void	ft_read_line(int fd, char **keep, char **tmp);
+char	*ft_parse_line(char **keep, char **tmp);
+char	*get_before_newline(const char *s);
+char	*get_after_newline(const char *s);
+
+/* ---------- UTILS ---------- */
+int		contains_newline(const char *s);
+char	*ft_strdup(const char *s1);
 char	*join_strs(const char *s1, const char *s2);
 void	*ft_malloc_zero(size_t count, size_t size);
 void	ft_free_strs(char **str, char **str2, char **str3);
-
 
 /* ft_printf */
 int		ft_printf(const char *format, ...);
